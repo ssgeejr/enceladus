@@ -24,5 +24,5 @@ https://hl7.org/fhir/R4/ \
 (https://code.cerner.com/apiaccess \
 (https://apex.oracle.com/en/ \
  \
-https://forums.oracle.com/ords/apexds/domain/open-developer-experience \
+https://forums.oracle.com/ords/apexds/domain/open-developer-experience 
 
