@@ -8,7 +8,7 @@ apt-get install -y git python3 python3-pip \
 cd /usr/bin \
 ln -s python3 python \
 sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED \
-pip install fhir.resources requests \
+pip install fhir.resources requests 
  
 ### Reference Pages
 
