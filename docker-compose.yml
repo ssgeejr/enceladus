@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+    tethysdb:
+        image: mysql:8.0.25
+        container_name: enceladusdb
+#        tty: true
+        restart: always
+        environment:
+            MYSQL_DATABASE: 'enceladus'
+            MYSQL_USER: 'enceladus'
+            MYSQL_PASSWORD: 'enceladus'
+            MYSQL_ROOT_PASSWORD: 'threeblindmice'
+        security_opt:
+            - seccomp:unconfined
+        volumes:
+            - ./mysql:/docker-entrypoint-initdb.d/:ro
+            - /opt/apps/enceladusdb:/var/lib/mysql
+        ports:
+            - 3306:3306
