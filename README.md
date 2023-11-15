@@ -12,7 +12,9 @@ sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin d
 cd /usr/bin \
 ln -s python3 python \
 sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED \
-pip install fhir.resources requests 
+pip install fhir.resources requests \
+pip3 install mysql-connector-python \
+ \
  
 ### Reference Pages
 
