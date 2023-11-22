@@ -12,6 +12,7 @@ class Enceladus:
         print(self.config.configFile)
         print(self.config.working_dir)
         parser = FileParser(self.config)
+        parser.parseFileStack()
 
 
     def main(self, *argv):

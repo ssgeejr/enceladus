@@ -5,5 +5,5 @@ import os, configparser, time
 class Config:
     userDefinedKey: bool = False
     configFile: str = 'db.ini'
-    working_dir: str = '/opt/apps/835files'
+    working_dir: str = '/opt/apps/denials'
     cdir: str = os.path.dirname(os.path.abspath(__file__))
