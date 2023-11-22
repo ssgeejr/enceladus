@@ -8,13 +8,29 @@ from DenialRecord import Record
 
 class FileParser:
     claimID = None
-    def __init__(self, config: Config):
-        self.config = configparser.ConfigParser()
-        #Shared Configuration Settings
-        self.userDefinedKey = config.userDefinedKey
-        self.configFile = config.configFile
-        self.cdir = config.cdir
-        self.working_dir = config.working_dir
+
+    def __init__(self):
+        self.config = Config()
+        print(self.config.configFile)
+        print(self.config.working_dir)
+        self.working_dir = 'C:\dev\wmmc\denials'
+        print('**********************************************************')
+        print('Configuration File: ', self.config.configFile)
+        config_source = os.path.join(self.config.cdir, self.config.configFile)
+        print('Configuration Source: ', config_source)
+        credentials = configparser.ConfigParser()
+        credentials.read(config_source)
+        print('**********************************************************')
+
+        self.cnx = mysql.connector.connect(user=credentials['enceladus']['user'],
+                                      password=credentials['enceladus']['passwd'],
+                                      host=credentials['enceladus']['host'],
+                                      database=credentials['enceladus']['db'])
+
+        self.mycursor = self.cnx.cursor()
+
+
+
 
     def parseFileStack(self):
         st = time.time()
@@ -31,6 +47,14 @@ class FileParser:
         lqhe = False
 
         groupname = None
+
+        denailsql = ("insert into denials"
+               + " (groupname,filedate,grandtotal,filename)"
+               + " values(%s,STR_TO_DATE(%s, '%Y%m%d'),%s,%s)")
+        adjustmentsql = ("insert into adjustments"
+                     + " (denialid,claimid,keytype,amount)"
+                     + " values(%s,%s,%s,%s)")
+
         for file in glob.glob("*.835"):
             fileCount += 1
 
@@ -39,8 +63,6 @@ class FileParser:
             with open(file, mode='r') as rofile:
                 record = None
                 count = 0
-
-
 
                 try:
                     for line in rofile:
@@ -142,6 +164,22 @@ class FileParser:
                         print('>>>>>>>>>>>>>>>>>', record.groupname)
                         print('>>>>>>>>>>>>>>>>>', record.grandtotal)
                         print('>>>>>>>>>>>>>>>>>', record.adjustments)
+
+                        values = (record.groupname,record.filedate,record.grandtotal,record.filename)
+                        self.mycursor.execute(denailsql, values)
+                        rowid = self.mycursor.lastrowid
+                        #print(rowid)
+
+                        for key, value in record.adjustments.items():
+                            items = key.split('*')
+                            print(f'Type: {items[0]} claimID {items[1]} amount {value}')
+                            adjustmentsql
+                            avalues = (rowid,items[1],items[0],value)
+                            self.mycursor.execute(adjustmentsql, avalues)
+                        self.cnx.commit()
+
+
+
 
                     grandtotal = 0.0
 
