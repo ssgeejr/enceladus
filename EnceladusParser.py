@@ -6,6 +6,7 @@ from EnceladusConfig import Config
 
 
 class FileParser:
+
     def __init__(self, config: Config):
         self.config = configparser.ConfigParser()
         #Shared Configuration Settings
@@ -15,6 +16,7 @@ class FileParser:
         self.working_dir = config.working_dir
 
     def parseFileStack(self):
+        st = time.time()
         print(f'Switching to working directory: {self.working_dir}')
         os.chdir(self.working_dir)
         loadfile_list = []
@@ -29,12 +31,18 @@ class FileParser:
                     claimID = None
                     adjustments = {}
                     grandtotal = 0.0
+                    header = None
+                    """
+                    GS Functional Group Header
+                    GS01 Functional Identifier Code ‘HP’ Health Care Claim
+                    Payment/Advice (835)
+                    """
                     for line in rofile:
-
-
-
-#                        print('>', line)
-                        if line.startswith('CLP*'):
+                        if line.startswith('GS*HP*'):
+                            gshp = line[6:].split('*',2)
+                            print(f'Group: {gshp[1]}')
+                            group = None
+                        elif line.startswith('CLP*'):
                             if claimID and len(adjustments) > 0:
                                 print('Claim ID: ', claimID)
                                 total = 0.0
@@ -49,6 +57,7 @@ class FileParser:
                                 adjustments = {}
                                 grandtotal += total
                                 total = 0.0
+                                header = None
 
 
                             tokens = line.split('*',2)
@@ -68,14 +77,13 @@ class FileParser:
                             adj = line[12:].split('*')
                             adjustments['278'] = adj[0]
 
-
-#                271;
-#                272;
-#                278
                     print(f"Grand Total Adjustment: ${grandtotal:,.2f}")
+                    print('______________________________________________________________')
+                    grandtotal = 0.0
                 except Error as e:
                     print('Error at line: ', count)
                     print(e)
 
-            break
-#            os.rename(old_file, new_file)
+        et = time.time()
+        elapsed_time = et - st
+        print('Execution time:', elapsed_time, 'seconds')
