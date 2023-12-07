@@ -7,3 +7,4 @@ class Config:
     configFile: str = 'db.ini'
     working_dir: str = '/opt/apps/denials'
     cdir: str = os.path.dirname(os.path.abspath(__file__))
+    dryrun: str = False

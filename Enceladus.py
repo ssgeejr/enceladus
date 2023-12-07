@@ -11,13 +11,15 @@ class Enceladus:
     def runEnceladus(self):
         print(self.config.configFile)
         print(self.config.working_dir)
-        parser = FileParser()
+        print(self.config.dryrun)
+
+        parser = FileParser(self.config)
         parser.parseFileStack()
 
 
     def main(self, *argv):
         try:
-            opts, args = getopt.getopt(argv, "h:c:w:")
+            opts, args = getopt.getopt(argv, "h:c:w:x")
         except getopt.GetoptError as e:
             print('>>>> ERROR: %s' % str(e))
             sys.exit(2)
@@ -33,6 +35,8 @@ class Enceladus:
                 self.config.configFile = arg
             elif opt in "-w":
                 self.config.working_dir = arg
+            elif opt in "-x":
+                self.config.dryrun = True
 
         self.runEnceladus()
 

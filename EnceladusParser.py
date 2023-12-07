@@ -9,23 +9,26 @@ from DenialRecord import Record
 class FileParser:
     claimID = None
 
-    def __init__(self):
-        self.config = Config()
+    def __init__(self, global_cfg):
+        self.config = global_cfg
         print(self.config.configFile)
         print(self.config.working_dir)
-        self.working_dir = 'C:\dev\wmmc\denials'
+        print(self.config.dryrun)
+
+
         print('**********************************************************')
         print('Configuration File: ', self.config.configFile)
         config_source = os.path.join(self.config.cdir, self.config.configFile)
         print('Configuration Source: ', config_source)
         credentials = configparser.ConfigParser()
         credentials.read(config_source)
+
         print('**********************************************************')
 
         self.cnx = mysql.connector.connect(user=credentials['enceladus']['user'],
-                                      password=credentials['enceladus']['passwd'],
-                                      host=credentials['enceladus']['host'],
-                                      database=credentials['enceladus']['db'])
+              password=credentials['enceladus']['passwd'],
+              host=credentials['enceladus']['host'],
+              database=credentials['enceladus']['db'])
 
         self.mycursor = self.cnx.cursor()
 
@@ -34,8 +37,8 @@ class FileParser:
 
     def parseFileStack(self):
         st = time.time()
-        print(f'Switching to working directory: {self.working_dir}')
-        os.chdir(self.working_dir)
+        print(f'Switching to working directory: {self.config.working_dir}')
+        os.chdir(self.config.working_dir)
         loadfile_list = []
         batchTotal = 0.0
         fileCount = 0
@@ -49,17 +52,17 @@ class FileParser:
         groupname = None
 
         denailsql = ("insert into denials"
-               + " (groupname,filedate,grandtotal,filename)"
-               + " values(%s,STR_TO_DATE(%s, '%Y%m%d'),%s,%s)")
+                + " (groupname,filedate,grandtotal,filename)"
+                + " values(%s,STR_TO_DATE(%s, '%Y%m%d'),%s,%s)")
         adjustmentsql = ("insert into adjustments"
-                     + " (denialid,claimid,keytype,amount)"
-                     + " values(%s,%s,%s,%s)")
+                + " (denialid,claimid,keytype,amount)"
+                + " values(%s,%s,%s,%s)")
 
         for file in glob.glob("*.835"):
             fileCount += 1
 
-            old_file = os.path.join(self.working_dir, file)
-            new_file = os.path.join(self.working_dir, file + '.loaded')
+            old_file = os.path.join(self.config.working_dir, file)
+            new_file = os.path.join(self.config.working_dir, file + '.loaded')
             with open(file, mode='r') as rofile:
                 record = None
                 count = 0
@@ -165,21 +168,21 @@ class FileParser:
                         print('>>>>>>>>>>>>>>>>>', record.grandtotal)
                         print('>>>>>>>>>>>>>>>>>', record.adjustments)
 
-                        values = (record.groupname,record.filedate,record.grandtotal,record.filename)
-                        self.mycursor.execute(denailsql, values)
-                        rowid = self.mycursor.lastrowid
-                        #print(rowid)
+                        if not self.config.dryrun:
+                            values = (record.groupname,record.filedate,record.grandtotal,record.filename)
+                            self.mycursor.execute(denailsql, values)
+                            rowid = self.mycursor.lastrowid
+                            #print(rowid)
 
-                        for key, value in record.adjustments.items():
-                            items = key.split('*')
-                            print(f'Type: {items[0]} claimID {items[1]} amount {value}')
-                            adjustmentsql
-                            avalues = (rowid,items[1],items[0],value)
-                            self.mycursor.execute(adjustmentsql, avalues)
-                        self.cnx.commit()
-
-
-
+                            for key, value in record.adjustments.items():
+                                items = key.split('*')
+                                print(f'Type: {items[0]} claimID {items[1]} amount {value}')
+                                adjustmentsql
+                                avalues = (rowid,items[1],items[0],value)
+                                self.mycursor.execute(adjustmentsql, avalues)
+                            self.cnx.commit()
+                        else:
+                            print('********* DRY RUN ENABLED -- DATA NOT STORED IN DB *********')
 
                     grandtotal = 0.0
 
