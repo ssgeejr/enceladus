@@ -108,20 +108,29 @@ class FileParser:
                             adj = line[12:].split('*')
                             #print(line)
                             #print(f'271 {adj[0]}')
-                            adjustments['271'] = adj[0]
-                            record.addAdjustment(f'271*{self.claimID}', adj[0])
+                            if float(adj[0]) > 0:
+                                adjustments['271'] = adj[0]
+                                record.addAdjustment(f'271*{self.claimID}', adj[0])
+#                            else:
+#                                print(f'skipping negative/non-positive value: {adj[0]}')
                         elif line.startswith("SVC*NU>0272") and self.claimID:
                             adj = line[12:].split('*')
                             #print(line)
                             #print(f'272 {adj[0]}')
-                            adjustments['272'] = adj[0]
-                            record.addAdjustment(f'272*{self.claimID}', adj[0])
+                            if float(adj[0]) > 0:
+                                adjustments['272'] = adj[0]
+                                record.addAdjustment(f'272*{self.claimID}', adj[0])
+ #                           else:
+ #                               print(f'skipping negative/non-positive value: {adj[0]}')
                         elif line.startswith("SVC*NU>0278") and self.claimID:
                             adj = line[12:].split('*')
                             #print(line)
                             #print(f'278 {adj[0]}')
-                            adjustments['278'] = adj[0]
-                            record.addAdjustment(f'278*{self.claimID}',adj[0])
+                            if float(adj[0]) > 0:
+                                adjustments['278'] = adj[0]
+                                record.addAdjustment(f'278*{self.claimID}',adj[0])
+#                            else:
+#                                print(f'skipping negative/non-positive value: {adj[0]}')
                         elif line.startswith('CAS*CO*16') and self.claimID:
                             casco = True
                         elif line.startswith('LQ*HE*M51') and self.claimID:
@@ -176,8 +185,8 @@ class FileParser:
 
                             for key, value in record.adjustments.items():
                                 items = key.split('*')
-                                print(f'Type: {items[0]} claimID {items[1]} amount {value}')
-                                adjustmentsql
+                                #print(f'Type: {items[0]} claimID {items[1]} amount {value}')
+
                                 avalues = (rowid,items[1],items[0],value)
                                 self.mycursor.execute(adjustmentsql, avalues)
                             self.cnx.commit()
