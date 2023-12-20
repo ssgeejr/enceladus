@@ -80,6 +80,7 @@ class FileParser:
                             record = Record(file,filedate,groupname)
 
                         elif line.startswith('CLP*'):
+                            print(f'>>>> casco22 {casco22}')
                             if self.claimID \
                                     and len(adjustments) > 0 \
                                     and casco\

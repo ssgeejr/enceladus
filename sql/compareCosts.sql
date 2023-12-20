@@ -7,6 +7,6 @@ from
 where
 	a.denialid < 11
 	and b.denialid > 10
-    and a.denialid = b.denialid
+    and a.filename = b.filename
 order by 
 	a.denialid asc
