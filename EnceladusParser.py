@@ -136,6 +136,7 @@ class FileParser:
                         elif line.startswith('LQ*HE*M51') and self.claimID:
                             lqhe = True
                         elif line.startswith('CAS*CO*22') and self.claimID:
+                            print('****FOUND CAS*CO*22 *****')
                             self.claimID = None
                             adjustments = {}
                             total = 0.0
@@ -177,11 +178,11 @@ class FileParser:
                         print('______________________________________________________________')
                         batchTotal += grandtotal
 
-                        print('>>>>>>>>>>>>>>>>>', record.filename)
-                        print('>>>>>>>>>>>>>>>>>', record.filedate)
-                        print('>>>>>>>>>>>>>>>>>', record.groupname)
-                        print('>>>>>>>>>>>>>>>>>', record.grandtotal)
-                        print('>>>>>>>>>>>>>>>>>', record.adjustments)
+                        #print('>>>>>>>>>>>>>>>>>', record.filename)
+                        #print('>>>>>>>>>>>>>>>>>', record.filedate)
+                        #print('>>>>>>>>>>>>>>>>>', record.groupname)
+                        #print('>>>>>>>>>>>>>>>>>', record.grandtotal)
+                        #print('>>>>>>>>>>>>>>>>>', record.adjustments)
 
                         if not self.config.dryrun:
                             values = (record.groupname,record.filedate,record.grandtotal,record.filename)
