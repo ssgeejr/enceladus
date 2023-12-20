@@ -85,6 +85,7 @@ class FileParser:
                                     and casco\
                                     and lqhe\
                                     and not casco22:
+                                print(f'casco22 {casco22}')
                                 #print('Claim ID: ', self.claimID)
 
                                 for key, value in adjustments.items():
@@ -139,8 +140,9 @@ class FileParser:
                         elif line.startswith('LQ*HE*M51') and self.claimID:
                             lqhe = True
                         elif line.startswith('CAS*CO*22') and self.claimID:
-                            print('****FOUND CAS*CO*22 *****')
+                            print(f'****FOUND CAS*CO*22 {line} *****')
                             casco22 = True
+
 
                     groupname = None
                     filedate = None
