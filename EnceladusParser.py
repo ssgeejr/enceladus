@@ -48,6 +48,7 @@ class FileParser:
         total = 0.0
         casco = False
         lqhe = False
+        casco22 = False
 
         groupname = None
 
@@ -82,7 +83,8 @@ class FileParser:
                             if self.claimID \
                                     and len(adjustments) > 0 \
                                     and casco\
-                                    and lqhe:
+                                    and lqhe\
+                                    and not casco22:
                                 #print('Claim ID: ', self.claimID)
 
                                 for key, value in adjustments.items():
@@ -98,6 +100,7 @@ class FileParser:
                             total = 0.0
                             casco = False
                             lqhe = False
+                            casco22 = False
 
                             tokens = line.split('*',2)
                             self.claimID = tokens[1]
@@ -137,11 +140,7 @@ class FileParser:
                             lqhe = True
                         elif line.startswith('CAS*CO*22') and self.claimID:
                             print('****FOUND CAS*CO*22 *****')
-                            self.claimID = None
-                            adjustments = {}
-                            total = 0.0
-                            casco = False
-                            lqhe = False
+                            casco22 = True
 
                     groupname = None
                     filedate = None
