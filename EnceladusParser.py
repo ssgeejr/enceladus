@@ -135,6 +135,12 @@ class FileParser:
                             casco = True
                         elif line.startswith('LQ*HE*M51') and self.claimID:
                             lqhe = True
+                        elif line.startswith('CAS*CO*22') and self.claimID:
+                            self.claimID = None
+                            adjustments = {}
+                            total = 0.0
+                            casco = False
+                            lqhe = False
 
                     groupname = None
                     filedate = None
@@ -203,6 +209,7 @@ class FileParser:
         elapsed_time = et - st
         print(f"####  BATCH TOTAL: ${batchTotal:,.2f} ####")
         print(f'Parsed [{fileCount}] in [{elapsed_time}] seconds')
+
 
 #INSERT INTO custorder
 # VALUES ('Kevin', 'yes' , STR_TO_DATE('1-01-2012', '%d-%m-%Y') ) ;
