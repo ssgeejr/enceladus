@@ -1,0 +1,33 @@
+The 835 file, also known as the Electronic Remittance Advice (ERA), is a standard format used in the United States for the electronic transmission of healthcare payment information. It is commonly used by healthcare payers (like insurance companies) to communicate details about claims payments to healthcare providers. Some key values and segments in an 835 file include:
+
+ISA and IEA Segments: These are the Interchange Control Header and Trailer, which wrap around the entire set of transaction sets (like 835s) being exchanged.
+
+GS and GE Segments: The Functional Group Header and Trailer, which wrap around related transaction sets (like all 835s in a given file).
+
+ST and SE Segments: The Transaction Set Header and Trailer, which wrap around an individual 835 transaction.
+
+BPR Segment: The Financial Information segment, which contains payment information like the total payment amount, payment method, and banking information.
+
+TRN Segment: The Reassociation Trace Number, used for matching the payment to the ERA.
+
+DTM Segment: Date/Time Reference, which provides the date of the remittance.
+
+N1 Segment: Party Identification, used to identify entities like the payer and payee.
+
+CLP Segment: Claim Payment Information, which includes details about the individual claim, like the patient control number, claim status, and the amount paid.
+
+CAS Segment: Claim Adjustment, which lists any adjustments to the payment, such as deductions or denials.
+
+PLB Segment: Provider Level Adjustments, for any financial adjustments not specific to a single claim, such as interest payments or overpayment recoveries.
+
+LX Segment: Used to introduce service level detail information.
+
+TS3 and TS2 Segments: These provide summary-level information about claims for a specific provider or facility.
+
+NM1 Segment: Individual or Organizational Name, used for identifying the entities involved in the transaction.
+
+PER Segment: Administrative Communications Contact, for contact information.
+
+The 835 file is structured in a hierarchical manner, with each segment serving a specific purpose. Understanding these segments is crucial for healthcare providers and billing professionals to accurately process and reconcile claim payments.
+
+ 
