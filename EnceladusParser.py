@@ -29,7 +29,7 @@ class FileParser:
               password=credentials['enceladus']['passwd'],
               host=credentials['enceladus']['host'],
               database=credentials['enceladus']['db'])
-
+        print(f"Connection to database successful [{self.cnx.is_connected()}]")
         self.mycursor = self.cnx.cursor()
 
 
